@@ -1,0 +1,195 @@
+<head>
+  <style>
+  /*----------------------------
+                Base
+  ------------------------------*/
+  body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+  }
+
+  /*----------------------------
+            Typography
+  ------------------------------*/
+  h2 {
+    font-family: "IBM Plex Sans", sans-serif;
+    line-height: 1; 
+    color: rgb(31, 42, 68);
+    padding-bottom: 1rem;
+    border-bottom: 1px #E2E8F0 solid;
+  }
+
+  /*----------------------------
+              Grid
+  ------------------------------*/
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    height: 22.5rem;
+    padding: 1rem;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 5.5rem;
+  }
+
+  .input-type {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 1rem;
+  }
+  /*----------------------------
+            Buttons
+  ------------------------------*/
+
+  button,
+  select {
+    align-items: center;
+    height: 1.9rem;
+    font-family: "IBM Plex Sans", sans-serif;
+    /* font-weight: 600; */
+    line-height: 1;
+    font-size: 0.7rem;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    background-color: transparent;
+    color: rgb(31, 42, 68);
+    padding: 0.65em 1.25em;
+    transition: all 250ms ease 0s;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(31, 42, 68);
+    border-image: initial;
+    margin-bottom: -1px;
+    width: 50%;
+  }
+
+  button {
+    width: 100%;
+    justify-self: flex-end;
+  }
+
+  button:hover, 
+  button:focus,
+  select:hover {
+    background-color: rgb(224, 229, 228);
+    color: rgb(31, 42, 68);
+  }
+
+  button:active {
+    background-color: rgb(31, 42, 68);
+  }
+
+  .icon {
+    height: 1.7rem;
+    width: 1.7rem;
+    border-radius: 50%;
+    background-color: #68D391;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    cursor: pointer;
+    transition: background-color 0.1s ease-in-out;
+    color: white;
+  }
+
+  .icon.locked {
+    background-color: #A0AEC0;
+  }
+
+  .icon svg {
+    height: 1.4rem;
+    width: 1.7rem;
+    margin-top: 0.17rem;
+    pointer-events: none;
+  }
+
+  </style>
+</head>
+
+<body>
+  
+  <main class="container">
+
+    <section class="inputWrapper">
+      <h2>Input Creator</h2>
+      <div class="wrapper">
+        <div class="input-type">
+          <select>
+            <option value="text">Text</option>
+            <option value="choice">Choice</option>
+            <option value="image">Image</option>
+            <option value="number">Number</option>
+            <option value="spreadsheet">Spreadsheet</option>
+            <option value="colour">Colour</option>
+            <option value="smart">Smart/Text</option>
+          </select>
+          <div class="icon">
+            <svg class="open" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0)"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.00019 11C5.70033 11 3.67803 9.80581 2.52182 8C3.67803 6.19419 5.70033 5 8.00019 5C10.3 5 12.3223 6.19419 13.4785 8C12.3223 9.80581 10.3 11 8.00019 11ZM8.00019 4C10.8782 4 13.3776 5.6211 14.6351 8C13.3776 10.3789 10.8782 12 8.00019 12C5.12214 12 2.62273 10.3789 1.36523 8C2.62273 5.6211 5.12214 4 8.00019 4ZM8.00049 10C9.10506 10 10.0005 9.10457 10.0005 8C10.0005 6.89543 9.10506 6 8.00049 6C6.89592 6 6.00049 6.89543 6.00049 8C6.00049 9.10457 6.89592 10 8.00049 10Z" fill="white" fill-opacity="0.8"/></g><defs><clipPath id="clip0"><rect width="16" height="16" fill="#68D391"/></clipPath></defs></svg>
+          </div>
+        </div>
+        <button id="create">Create Input</button>
+      </div>
+    </section>
+
+    <section class="variationWrapper">
+      <h2>Variation Creator</h2>
+      <div class=>
+        <button id="professional-print">Create Professional Print</button>
+        <button id="office-print">Create Office Print</button>
+        <button id="digital">Create Digital</button>
+      </div>
+    </section>
+
+  </main>
+
+
+<script>
+
+//Toggle locked state
+  document.querySelector('.icon').addEventListener("click", function(e) {
+    let target = e.target;
+    console.log(target);
+    target.classList.toggle("locked");
+  }, false);
+
+//Inputs
+  document.getElementById('create').onclick = () => {
+    let inputType = document.querySelector("select");
+    let currentInput = inputType.options[inputType.selectedIndex].value;
+    let state = document.querySelector(".icon");
+    let currentState = state.classList.contains("locked");
+    let message = `create-${currentInput}-input-${currentState}`;
+    console.log(message);
+
+    parent.postMessage({ pluginMessage: { type: message } }, '*');
+  }
+
+//Variations
+  document.getElementById('professional-print').onclick = () => {
+    parent.postMessage({ pluginMessage: { type: 'create-prof-print' } }, '*');
+  }
+  document.getElementById('office-print').onclick = () => {
+    parent.postMessage({ pluginMessage: { type: 'create-office-print' } }, '*');
+  }
+  document.getElementById('digital').onclick = () => {
+    parent.postMessage({ pluginMessage: { type: 'create-digital' } }, '*');
+  }
+
+  /* 
+//This will close the modal
+document.getElementById('cancel').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+}
+*/
+
+</script>
+</body>
